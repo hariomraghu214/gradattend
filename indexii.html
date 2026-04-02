@@ -1,0 +1,416 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVNIT Academic Dashboard</title>
+    <meta name="description" content="Grade Calculator, SGPA Calculator & Reference for SVNIT students">
+</head>
+<body style="background: rgb(15, 23, 42);">
+<div id="root">
+    <div style="background: rgb(15, 23, 42); min-height: 100vh; color: rgb(226, 232, 240);">
+        <!-- Header -->
+        <div class="header-wrap" style="background: rgb(30, 41, 59); border-bottom: 1px solid rgb(51, 65, 85);">
+            <div style="max-width: 720px; margin: 0px auto; padding: 12px 16px; display: flex; align-items: center; gap: 10px; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+                    <div style="width: 32px; height: 32px; background: rgb(99, 102, 241); border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5"></path>
+                            <path d="M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <div style="font-size: 13px; font-weight: 700; color: rgb(226, 232, 240); line-height: 1.1;">SVNIT</div>
+                        <div style="font-size: 10px; color: rgb(148, 163, 184); line-height: 1.1;">Academic Dashboard</div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 4px; background: rgb(15, 23, 42); border-radius: 24px; padding: 4px; overflow-x: auto; flex-shrink: 1;">
+                    <div class="tab-pill" style="background: rgb(99, 102, 241); color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: all 0.3s;">Grade Calculator</div>
+                    <div class="tab-pill" style="background: transparent; color: rgb(148, 163, 184); padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: all 0.3s;">SGPA Calculator</div>
+                    <div class="tab-pill" style="background: transparent; color: rgb(148, 163, 184); padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: all 0.3s;">Reference</div>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center; flex-shrink: 0;">
+                    <button id="shareBtn" title="Share" style="background: none; border: 1px solid rgb(51, 65, 85); border-radius: 8px; padding: 7px; cursor: pointer; color: rgb(148, 163, 184); display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <circle cx="18" cy="5" r="3"></circle>
+                            <circle cx="6" cy="12" r="3"></circle>
+                            <circle cx="18" cy="19" r="3"></circle>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                        </svg>
+                    </button>
+                    <button id="themeBtn" title="Toggle theme" style="background: none; border: 1px solid rgb(51, 65, 85); border-radius: 8px; padding: 7px; cursor: pointer; color: rgb(148, 163, 184); display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div style="max-width: 720px; margin: 0px auto; padding: 16px 16px 80px;">
+            <div>
+                <!-- Options Card -->
+                <div style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85); border-radius: 12px; padding: 16px; margin-bottom: 14px;">
+                    <div style="font-size: 11px; font-weight: 600; color: rgb(148, 163, 184); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em;">Options</div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                        <div id="tutorialToggle" class="toggle-track" style="background: rgb(51, 65, 85); width: 44px; height: 24px; border-radius: 12px; position: relative; cursor: pointer;">
+                            <div class="toggle-thumb" style="position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s;"></div>
+                        </div>
+                        <span style="font-size: 14px; color: rgb(203, 213, 225);">With Tutorial (125 Marks)</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div id="attendancePenaltyToggle" class="toggle-track" style="background: rgb(51, 65, 85); width: 44px; height: 24px; border-radius: 12px; position: relative; cursor: pointer;">
+                            <div class="toggle-thumb" style="position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s;"></div>
+                        </div>
+                        <span style="font-size: 14px; color: rgb(203, 213, 225);">Attendance 60–75% (−1 GP)</span>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- 75% Attendance Manager Card -->
+                <div style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85); border-radius: 12px; padding: 16px; margin-bottom: 14px;">
+                    <div style="font-size: 11px; font-weight: 600; color: rgb(148, 163, 184); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.08em;">75% Attendance Manager</div>
+                    
+                    <!-- Input Section -->
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <div style="flex: 1 1 0%; font-size: 14px; color: rgb(203, 213, 225);">Classes Attended</div>
+                        <input type="number" id="attendedInput" min="0" placeholder="0" value="0" 
+                               style="background: rgb(15, 23, 42); border: 1px solid rgb(51, 65, 85); color: rgb(226, 232, 240); border-radius: 8px; padding: 8px 12px; width: 100px; outline: none; font-size: 14px; text-align: center;">
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                        <div style="flex: 1 1 0%; font-size: 14px; color: rgb(203, 213, 225);">Total Classes</div>
+                        <input type="number" id="totalInput" min="0" placeholder="0" value="0" 
+                               style="background: rgb(15, 23, 42); border: 1px solid rgb(51, 65, 85); color: rgb(226, 232, 240); border-radius: 8px; padding: 8px 12px; width: 100px; outline: none; font-size: 14px; text-align: center;">
+                    </div>
+
+                    <!-- Percentage Display -->
+                    <div style="background: rgb(15, 23, 42); border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 16px;">
+                        <div style="font-size: 11px; color: rgb(148, 163, 184); margin-bottom: 8px;">Attendance Percentage</div>
+                        <div id="percentageDisplay" style="font-size: 48px; font-weight: 700; line-height: 1; color: rgb(148, 163, 184);">0%</div>
+                    </div>
+
+                    <!-- Status Message -->
+                    <div id="statusMessage" style="background: rgb(15, 23, 42); border-radius: 10px; padding: 16px; font-size: 14px; color: rgb(203, 213, 225); text-align: center; line-height: 1.5;">
+                        Enter your attendance details to see the analysis.
+                    </div>
+                </div>
+
+                <!-- Marks Input Card -->
+                <div style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85); border-radius: 12px; padding: 16px; margin-bottom: 14px;">
+                    <div style="font-size: 11px; font-weight: 600; color: rgb(148, 163, 184); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.08em;">Marks Input</div>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <div style="flex: 1 1 0%; font-size: 14px; color: rgb(203, 213, 225);">Mid-Sem <span style="font-size: 12px; color: rgb(148, 163, 184);">/ 30</span></div>
+                        <input type="number" id="midSemInput" min="0" max="30" placeholder="0" value="" 
+                               style="background: rgb(15, 23, 42); border: 1px solid rgb(51, 65, 85); color: rgb(226, 232, 240); border-radius: 8px; padding: 8px 12px; width: 100px; outline: none; font-size: 14px; text-align: center;">
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <div style="flex: 1 1 0%; font-size: 14px; color: rgb(203, 213, 225);">End-Sem <span style="font-size: 12px; color: rgb(148, 163, 184);">/ 50</span></div>
+                        <input type="number" id="endSemInput" min="0" max="50" placeholder="0" value="" 
+                               style="background: rgb(15, 23, 42); border: 1px solid rgb(51, 65, 85); color: rgb(226, 232, 240); border-radius: 8px; padding: 8px 12px; width: 100px; outline: none; font-size: 14px; text-align: center;">
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <div style="flex: 1 1 0%; font-size: 14px; color: rgb(203, 213, 225);">Quiz 1 <span style="font-size: 12px; color: rgb(148, 163, 184);">/ 10</span></div>
+                        <input type="number" id="quiz1Input" min="0" max="10" placeholder="0" value="" 
+                               style="background: rgb(15, 23, 42); border: 1px solid rgb(51, 65, 85); color: rgb(226, 232, 240); border-radius: 8px; padding: 8px 12px; width: 100px; outline: none; font-size: 14px; text-align: center;">
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <div style="flex: 1 1 0%; font-size: 14px; color: rgb(203, 213, 225);">Quiz 2 <span style="font-size: 12px; color: rgb(148, 163, 184);">/ 10</span></div>
+                        <input type="number" id="quiz2Input" min="0" max="10" placeholder="0" value="" 
+                               style="background: rgb(15, 23, 42); border: 1px solid rgb(51, 65, 85); color: rgb(226, 232, 240); border-radius: 8px; padding: 8px 12px; width: 100px; outline: none; font-size: 14px; text-align: center;">
+                    </div>
+                    <div id="tutorialRow" style="display: none; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <div style="flex: 1 1 0%; font-size: 14px; color: rgb(203, 213, 225);">Tutorial <span style="font-size: 12px; color: rgb(148, 163, 184);">/ 25</span></div>
+                        <input type="number" id="tutorialInput" min="0" max="25" placeholder="0" value="" 
+                               style="background: rgb(15, 23, 42); border: 1px solid rgb(51, 65, 85); color: rgb(226, 232, 240); border-radius: 8px; padding: 8px 12px; width: 100px; outline: none; font-size: 14px; text-align: center;">
+                    </div>
+                </div>
+
+                <!-- Result Card -->
+                <div style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85); border-radius: 12px; padding: 16px; margin-bottom: 14px;">
+                    <div style="font-size: 11px; font-weight: 600; color: rgb(148, 163, 184); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.08em;">Result</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; text-align: center;">
+                        <div style="background: rgb(15, 23, 42); border-radius: 10px; padding: 14px 8px;">
+                            <div style="font-size: 11px; color: rgb(148, 163, 184); margin-bottom: 6px;">Total Marks</div>
+                            <div id="totalMarks" style="font-size: 26px; font-weight: 700; color: rgb(226, 232, 240); line-height: 1;">0.0</div>
+                            <div id="maxMarks" style="font-size: 11px; color: rgb(148, 163, 184); margin-top: 3px;">/ 100</div>
+                        </div>
+                        <div style="background: rgb(15, 23, 42); border-radius: 10px; padding: 14px 8px;">
+                            <div style="font-size: 11px; color: rgb(148, 163, 184); margin-bottom: 6px;">Grade</div>
+                            <div id="gradeDisplay" style="font-size: 26px; font-weight: 700; color: rgb(220, 38, 38); line-height: 1;">FF</div>
+                        </div>
+                        <div style="background: rgb(15, 23, 42); border-radius: 10px; padding: 14px 8px;">
+                            <div style="font-size: 11px; color: rgb(148, 163, 184); margin-bottom: 6px;">Grade Points</div>
+                            <div id="gradePoints" style="font-size: 26px; font-weight: 700; color: rgb(99, 102, 241); line-height: 1;">0</div>
+                            <div style="font-size: 11px; color: rgb(148, 163, 184); margin-top: 3px;">/ 10</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Global state
+let state = {
+    tutorialEnabled: false,
+    attendancePenalty: false
+};
+
+// ========== ATTENDANCE CALCULATOR ==========
+(function() {
+    const attendedInput = document.getElementById('attendedInput');
+    const totalInput = document.getElementById('totalInput');
+    const percentageDisplay = document.getElementById('percentageDisplay');
+    const statusMessage = document.getElementById('statusMessage');
+
+    function calculateAttendance() {
+        let attended = parseInt(attendedInput.value) || 0;
+        let total = parseInt(totalInput.value) || 0;
+
+        // Validation: Prevent attended from being greater than total
+        if (attended > total && total > 0) {
+            attended = total;
+            attendedInput.value = total;
+        }
+
+        // Calculate percentage
+        let percentage = 0;
+        if (total > 0) {
+            percentage = (attended / total) * 100;
+        }
+
+        // Update percentage display with color
+        const percentageText = percentage.toFixed(1) + '%';
+        percentageDisplay.textContent = percentageText;
+
+        // Color coding
+        if (percentage >= 75) {
+            percentageDisplay.style.color = 'rgb(34, 197, 94)'; // Green
+        } else {
+            percentageDisplay.style.color = 'rgb(220, 38, 38)'; // Red
+        }
+
+        // Calculate status message based on the three states
+        if (total === 0 || attended === 0) {
+            statusMessage.textContent = 'Enter your attendance details to see the analysis.';
+            statusMessage.style.color = 'rgb(203, 213, 225)';
+            percentageDisplay.style.color = 'rgb(148, 163, 184)';
+        } else if (percentage > 75) {
+            // State A: Safe - Can bunk classes
+            const bunkable = Math.floor((4 * attended - 3 * total) / 3);
+            if (bunkable > 0) {
+                statusMessage.innerHTML = `✓ You can safely bunk <strong>${bunkable}</strong> class${bunkable > 1 ? 'es' : ''}.`;
+                statusMessage.style.color = 'rgb(34, 197, 94)'; // Green
+            } else {
+                statusMessage.textContent = '✓ You are above 75%. Keep it up!';
+                statusMessage.style.color = 'rgb(34, 197, 94)'; // Green
+            }
+        } else if (percentage < 75) {
+            // State B: Danger - Must attend classes
+            const recover = Math.ceil(3 * total - 4 * attended);
+            statusMessage.innerHTML = `⚠ You must attend <strong>${recover}</strong> class${recover > 1 ? 'es' : ''} in a row to recover.`;
+            statusMessage.style.color = 'rgb(239, 68, 68)'; // Red
+        } else {
+            // State C: Critical - Exactly 75%
+            statusMessage.textContent = '⚡ You are on the edge. Do not miss the next class.';
+            statusMessage.style.color = 'rgb(245, 158, 11)'; // Orange/Yellow
+        }
+    }
+
+    // Add event listeners for real-time updates
+    attendedInput.addEventListener('input', calculateAttendance);
+    totalInput.addEventListener('input', calculateAttendance);
+
+    // Prevent negative values
+    attendedInput.addEventListener('blur', function() {
+        if (parseInt(this.value) < 0) this.value = 0;
+    });
+    totalInput.addEventListener('blur', function() {
+        if (parseInt(this.value) < 0) this.value = 0;
+    });
+
+    // Initial calculation
+    calculateAttendance();
+})();
+
+// ========== GRADE CALCULATOR ==========
+(function() {
+    const midSemInput = document.getElementById('midSemInput');
+    const endSemInput = document.getElementById('endSemInput');
+    const quiz1Input = document.getElementById('quiz1Input');
+    const quiz2Input = document.getElementById('quiz2Input');
+    const tutorialInput = document.getElementById('tutorialInput');
+    const totalMarksDisplay = document.getElementById('totalMarks');
+    const gradeDisplay = document.getElementById('gradeDisplay');
+    const gradePointsDisplay = document.getElementById('gradePoints');
+    const maxMarksDisplay = document.getElementById('maxMarks');
+
+    function getGrade(marks, maxMarks) {
+        const percentage = (marks / maxMarks) * 100;
+        
+        if (percentage >= 90) return { grade: 'AA', points: 10, color: 'rgb(34, 197, 94)' };
+        if (percentage >= 80) return { grade: 'AB', points: 9, color: 'rgb(34, 197, 94)' };
+        if (percentage >= 70) return { grade: 'BB', points: 8, color: 'rgb(34, 197, 94)' };
+        if (percentage >= 60) return { grade: 'BC', points: 7, color: 'rgb(34, 197, 94)' };
+        if (percentage >= 50) return { grade: 'CC', points: 6, color: 'rgb(245, 158, 11)' };
+        if (percentage >= 40) return { grade: 'CD', points: 5, color: 'rgb(245, 158, 11)' };
+        if (percentage >= 35) return { grade: 'DD', points: 4, color: 'rgb(239, 68, 68)' };
+        return { grade: 'FF', points: 0, color: 'rgb(220, 38, 38)' };
+    }
+
+    function calculateGrade() {
+        const midSem = parseFloat(midSemInput.value) || 0;
+        const endSem = parseFloat(endSemInput.value) || 0;
+        const quiz1 = parseFloat(quiz1Input.value) || 0;
+        const quiz2 = parseFloat(quiz2Input.value) || 0;
+        const tutorial = state.tutorialEnabled ? (parseFloat(tutorialInput.value) || 0) : 0;
+
+        // Validate max values
+        if (midSem > 30) midSemInput.value = 30;
+        if (endSem > 50) endSemInput.value = 50;
+        if (quiz1 > 10) quiz1Input.value = 10;
+        if (quiz2 > 10) quiz2Input.value = 10;
+        if (tutorial > 25) tutorialInput.value = 25;
+
+        const totalMarks = midSem + endSem + quiz1 + quiz2 + tutorial;
+        const maxMarks = state.tutorialEnabled ? 125 : 100;
+
+        // Get grade and points
+        let gradeData = getGrade(totalMarks, maxMarks);
+        
+        // Apply attendance penalty if enabled
+        if (state.attendancePenalty && gradeData.points > 0) {
+            gradeData.points = Math.max(0, gradeData.points - 1);
+        }
+
+        // Update display
+        totalMarksDisplay.textContent = totalMarks.toFixed(1);
+        maxMarksDisplay.textContent = `/ ${maxMarks}`;
+        gradeDisplay.textContent = gradeData.grade;
+        gradeDisplay.style.color = gradeData.color;
+        gradePointsDisplay.textContent = gradeData.points;
+        gradePointsDisplay.style.color = gradeData.points >= 6 ? 'rgb(99, 102, 241)' : 'rgb(220, 38, 38)';
+    }
+
+    // Add event listeners
+    midSemInput.addEventListener('input', calculateGrade);
+    endSemInput.addEventListener('input', calculateGrade);
+    quiz1Input.addEventListener('input', calculateGrade);
+    quiz2Input.addEventListener('input', calculateGrade);
+    tutorialInput.addEventListener('input', calculateGrade);
+
+    // Make calculateGrade global so toggles can trigger it
+    window.calculateGrade = calculateGrade;
+})();
+
+// ========== TOGGLE SWITCHES ==========
+(function() {
+    const tutorialToggle = document.getElementById('tutorialToggle');
+    const attendancePenaltyToggle = document.getElementById('attendancePenaltyToggle');
+    const tutorialRow = document.getElementById('tutorialRow');
+
+    tutorialToggle.addEventListener('click', function() {
+        state.tutorialEnabled = !state.tutorialEnabled;
+        const thumb = this.querySelector('.toggle-thumb');
+        
+        if (state.tutorialEnabled) {
+            this.style.background = 'rgb(99, 102, 241)';
+            thumb.style.left = '23px';
+            tutorialRow.style.display = 'flex';
+        } else {
+            this.style.background = 'rgb(51, 65, 85)';
+            thumb.style.left = '3px';
+            tutorialRow.style.display = 'none';
+            document.getElementById('tutorialInput').value = '';
+        }
+        window.calculateGrade();
+    });
+
+    attendancePenaltyToggle.addEventListener('click', function() {
+        state.attendancePenalty = !state.attendancePenalty;
+        const thumb = this.querySelector('.toggle-thumb');
+        
+        if (state.attendancePenalty) {
+            this.style.background = 'rgb(239, 68, 68)';
+            thumb.style.left = '23px';
+        } else {
+            this.style.background = 'rgb(51, 65, 85)';
+            thumb.style.left = '3px';
+        }
+        window.calculateGrade();
+    });
+})();
+
+// ========== HEADER BUTTONS ==========
+(function() {
+    const shareBtn = document.getElementById('shareBtn');
+    const themeBtn = document.getElementById('themeBtn');
+
+    shareBtn.addEventListener('click', function() {
+        this.style.color = 'rgb(99, 102, 241)';
+        setTimeout(() => {
+            this.style.color = 'rgb(148, 163, 184)';
+        }, 200);
+        
+        // Copy URL to clipboard
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Link copied to clipboard!');
+        } else {
+            alert('Share: ' + window.location.href);
+        }
+    });
+
+    themeBtn.addEventListener('click', function() {
+        this.style.color = 'rgb(99, 102, 241)';
+        setTimeout(() => {
+            this.style.color = 'rgb(148, 163, 184)';
+        }, 200);
+        alert('Theme toggle feature - Coming soon!');
+    });
+})();
+
+// ========== TAB NAVIGATION ==========
+(function() {
+    const tabs = document.querySelectorAll('.tab-pill');
+    
+    tabs.forEach((tab, index) => {
+        tab.addEventListener('click', function() {
+            // Remove active state from all tabs
+            tabs.forEach(t => {
+                t.style.background = 'transparent';
+                t.style.color = 'rgb(148, 163, 184)';
+            });
+            
+            // Add active state to clicked tab
+            this.style.background = 'rgb(99, 102, 241)';
+            this.style.color = 'white';
+            
+            // Show message for non-implemented tabs
+            if (index !== 0) {
+                setTimeout(() => {
+                    alert(this.textContent + ' - Coming soon!');
+                    // Reset to Grade Calculator tab
+                    tabs[0].click();
+                }, 100);
+            }
+        });
+    });
+})();
