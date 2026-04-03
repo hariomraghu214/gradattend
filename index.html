@@ -1,419 +1,559 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SVNIT Academic Dashboard</title>
-    <meta name="description" content="Grade Calculator, SGPA Calculator & Reference for SVNIT students">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVNIT Academic Dashboard</title>
+<meta name="description" content="Grade Calculator, SGPA Calculator & Reference for SVNIT students">
+<meta name="theme-color" content="#6366f1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" id="pwa-manifest">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+:root{
+  --bg:#0f172a;--surface:#1e293b;--card:#0f172a;--border:#334155;
+  --text:#e2e8f0;--sub:#cbd5e1;--muted:#94a3b8;
+  --accent:#6366f1;--accent2:#4f46e5;
+  --green:rgb(34,197,94);--red:rgb(220,38,38);--orange:rgb(245,158,11);
+}
+body{background:var(--bg);color:var(--text);transition:background .25s,color .25s}
+body.light{--bg:#f1f5f9;--surface:#ffffff;--card:#f8fafc;--border:#e2e8f0;--text:#1e293b;--sub:#334155;--muted:#64748b}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+
+.header-wrap{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--border);transition:background .25s,border-color .25s}
+.header-inner{max-width:720px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:10px;justify-content:space-between}
+.main-inner{max-width:720px;margin:0 auto;padding:16px 16px 100px}
+.logo-box{width:32px;height:32px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-title{font-size:13px;font-weight:700;color:var(--text);line-height:1.1}
+.logo-sub{font-size:10px;color:var(--muted);line-height:1.1}
+@media(max-width:480px){.logo-text{display:none}}
+.tab-bar{display:flex;gap:4px;background:var(--bg);border-radius:24px;padding:4px;overflow-x:auto;flex-shrink:1;transition:background .25s}
+.tab-pill{padding:8px 16px;border-radius:20px;cursor:pointer;font-size:13px;font-weight:500;transition:all .2s;white-space:nowrap;user-select:none;color:var(--muted)}
+.tab-pill.active{background:var(--accent);color:#fff}
+@media(max-width:520px){.tab-pill{padding:6px 10px;font-size:12px}}
+@media(max-width:380px){.tab-pill{padding:5px 8px;font-size:11px}}
+.icon-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:7px;cursor:pointer;color:var(--muted);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.icon-btn:hover{color:var(--accent);border-color:var(--accent)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px;transition:background .25s,border-color .25s}
+.card-label{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:.08em}
+.inset{background:var(--card);border-radius:10px;transition:background .25s}
+.toggle-track{width:44px;height:24px;border-radius:12px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle-thumb{position:absolute;left:3px;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.num-input{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 12px;width:100px;outline:none;font-size:14px;text-align:center;transition:border-color .2s,background .25s}
+.num-input:focus{border-color:var(--accent)}
+.select-input{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 12px;outline:none;font-size:14px;width:100%;cursor:pointer;transition:border-color .2s,background .25s}
+.select-input:focus{border-color:var(--accent)}
+.text-input{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 12px;width:100%;outline:none;font-size:14px;transition:border-color .2s,background .25s}
+.text-input:focus{border-color:var(--accent)}
+.btn-primary{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:14px;font-weight:500;transition:background .2s;white-space:nowrap}
+.btn-primary:hover{background:var(--accent2)}
+.btn-ghost{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:8px 14px;cursor:pointer;font-size:13px;transition:all .2s}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.field-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.field-label{flex:1;font-size:14px;color:var(--sub)}
+.field-label span{font-size:12px;color:var(--muted)}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;text-align:center}
+.result-cell{background:var(--card);border-radius:10px;padding:14px 8px;transition:background .25s}
+.result-val{font-size:26px;font-weight:700;line-height:1}
+.result-lbl{font-size:11px;color:var(--muted);margin-bottom:6px}
+.result-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.sgpa-table{width:100%;border-collapse:collapse}
+.sgpa-table th{padding:10px 12px;font-size:11px;color:var(--muted);font-weight:600;background:var(--card);text-align:center}
+.sgpa-table th:first-child{text-align:left}
+.sgpa-table td{padding:10px 12px;font-size:13px;border-top:1px solid var(--border);text-align:center;color:var(--sub)}
+.sgpa-table td:first-child{text-align:left;color:var(--text);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.grade-badge{display:inline-block;padding:3px 10px;border-radius:5px;font-size:12px;font-weight:700}
+.sgpa-empty{padding:36px;text-align:center;color:var(--muted)}
+.ring-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center}
+.circle-progress{transform:rotate(-90deg);transform-origin:64px 64px}
+.sgpa-stats{display:grid;grid-template-rows:1fr 1fr;gap:14px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;justify-content:center;transition:background .25s,border-color .25s}
+.ref-table{width:100%;border-collapse:collapse}
+.ref-table th{padding:10px 14px;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.05em;background:var(--card);text-align:left}
+.ref-table th:last-child{text-align:center}
+.ref-table td{padding:10px 14px;font-size:13px;border-top:1px solid var(--border);color:var(--sub)}
+.ref-table td:last-child{text-align:center;font-weight:700;color:var(--text)}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(2px)}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;width:min(340px,92%);transition:background .25s,border-color .25s}
+.modal-close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:22px;line-height:1;padding:0}
+.url-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--muted);font-family:monospace;word-break:break-all;margin-bottom:12px}
+.pwa-banner{display:none;position:fixed;bottom:0;left:0;right:0;z-index:90;background:var(--surface);border-top:1px solid var(--border);padding:14px 16px;align-items:center;gap:12px;transition:background .25s,border-color .25s}
+.pwa-banner.show{display:flex}
+.pwa-icon{width:38px;height:38px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.warn-box{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.25);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--orange);display:flex;gap:8px;align-items:center;margin-top:12px}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{opacity:1}
+</style>
 </head>
-<body style="background: rgb(15, 23, 42);">
-<div id="root">
-    <div style="background: rgb(15, 23, 42); min-height: 100vh; color: rgb(226, 232, 240);">
-        <!-- Header -->
-        <div class="header-wrap" style="background: rgb(30, 41, 59); border-bottom: 1px solid rgb(51, 65, 85);">
-            <div style="max-width: 720px; margin: 0px auto; padding: 12px 16px; display: flex; align-items: center; gap: 10px; justify-content: space-between;">
-                <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
-                    <div style="width: 32px; height: 32px; background: rgb(99, 102, 241); border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
-                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                            <path d="M2 17l10 5 10-5"></path>
-                            <path d="M2 12l10 5 10-5"></path>
-                        </svg>
-                    </div>
-                    <div class="logo-text">
-                        <div style="font-size: 13px; font-weight: 700; color: rgb(226, 232, 240); line-height: 1.1;">SVNIT</div>
-                        <div style="font-size: 10px; color: rgb(148, 163, 184); line-height: 1.1;">Academic Dashboard</div>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 4px; background: rgb(15, 23, 42); border-radius: 24px; padding: 4px; overflow-x: auto; flex-shrink: 1;">
-                    <div class="tab-pill" style="background: rgb(99, 102, 241); color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: all 0.3s;">Grade Calculator</div>
-                    <div class="tab-pill" style="background: transparent; color: rgb(148, 163, 184); padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: all 0.3s;">SGPA Calculator</div>
-                    <div class="tab-pill" style="background: transparent; color: rgb(148, 163, 184); padding: 8px 16px; border-radius: 20px; font-size: 13px; cursor: pointer; transition: all 0.3s;">Reference</div>
-                </div>
-                <div style="display: flex; gap: 8px; align-items: center; flex-shrink: 0;">
-                    <button id="shareBtn" title="Share" style="background: none; border: 1px solid rgb(51, 65, 85); border-radius: 8px; padding: 7px; cursor: pointer; color: rgb(148, 163, 184); display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                            <circle cx="18" cy="5" r="3"></circle>
-                            <circle cx="6" cy="12" r="3"></circle>
-                            <circle cx="18" cy="19" r="3"></circle>
-                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                        </svg>
-                    </button>
-                    <button id="themeBtn" title="Toggle theme" style="background: none; border: 1px solid rgb(51, 65, 85); border-radius: 8px; padding: 7px; cursor: pointer; color: rgb(148, 163, 184); display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                            <circle cx="12" cy="12" r="5"></circle>
-                            <line x1="12" y1="1" x2="12" y2="3"></line>
-                            <line x1="12" y1="21" x2="12" y2="23"></line>
-                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                            <line x1="1" y1="12" x2="3" y2="12"></line>
-                            <line x1="21" y1="12" x2="23" y2="12"></line>
-                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
+<body>
 
-        <!-- Main Content -->
-        <div style="max-width: 720px; margin: 0px auto; padding: 16px 16px 80px;">
-            <div>
-                <!-- Options Card -->
-                <div style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85); border-radius: 12px; padding: 16px; margin-bottom: 14px;">
-                    <div style="font-size: 11px; font-weight: 600; color: rgb(148, 163, 184); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em;">Options</div>
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-                        <div id="tutorialToggle" class="toggle-track" style="background: rgb(51, 65, 85); width: 44px; height: 24px; border-radius: 12px; position: relative; cursor: pointer;">
-                            <div class="toggle-thumb" style="position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s;"></div>
-                        </div>
-                        <span style="font-size: 14px; color: rgb(203, 213, 225);">With Tutorial (125 Marks)</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div id="attendancePenaltyToggle" class="toggle-track" style="background: rgb(51, 65, 85); width: 44px; height: 24px; border-radius: 12px; position: relative; cursor: pointer;">
-                            <div class="toggle-thumb" style="position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s;"></div>
-                        </div>
-                        <span style="font-size: 14px; color: rgb(203, 213, 225);">Attendance 60–75% (−1 GP)</span>
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
-                            <line x1="12" y1="9" x2="12" y2="13"></line>
-                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                        </svg>
-                    </div>
-                </div>
-
-                <!-- 75% Attendance Manager Card -->
-                <div style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85); border-radius: 12px; padding: 16px; margin-bottom: 14px;">
-                    <div style="font-size: 11px; font-weight: 600; color: rgb(148, 163, 184); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.08em;">75% Attendance Manager</div>
-                    
-                    <!-- Input Section -->
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                        <div style="flex: 1 1 0%; font-size: 14px; color: rgb(203, 213, 225);">Classes Attended</div>
-                        <input type="number" id="attendedInput" min="0" placeholder="0" value="0" 
-                               style="background: rgb(15, 23, 42); border: 1px solid rgb(51, 65, 85); color: rgb(226, 232, 240); border-radius: 8px; padding: 8px 12px; width: 100px; outline: none; font-size: 14px; text-align: center;">
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
-                        <div style="flex: 1 1 0%; font-size: 14px; color: rgb(203, 213, 225);">Total Classes</div>
-                        <input type="number" id="totalInput" min="0" placeholder="0" value="0" 
-                               style="background: rgb(15, 23, 42); border: 1px solid rgb(51, 65, 85); color: rgb(226, 232, 240); border-radius: 8px; padding: 8px 12px; width: 100px; outline: none; font-size: 14px; text-align: center;">
-                    </div>
-
-                    <!-- Percentage Display -->
-                    <div style="background: rgb(15, 23, 42); border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 16px;">
-                        <div style="font-size: 11px; color: rgb(148, 163, 184); margin-bottom: 8px;">Attendance Percentage</div>
-                        <div id="percentageDisplay" style="font-size: 48px; font-weight: 700; line-height: 1; color: rgb(148, 163, 184);">0%</div>
-                    </div>
-
-                    <!-- Status Message -->
-                    <div id="statusMessage" style="background: rgb(15, 23, 42); border-radius: 10px; padding: 16px; font-size: 14px; color: rgb(203, 213, 225); text-align: center; line-height: 1.5;">
-                        Enter your attendance details to see the analysis.
-                    </div>
-                </div>
-
-                <!-- Marks Input Card -->
-                <div style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85); border-radius: 12px; padding: 16px; margin-bottom: 14px;">
-                    <div style="font-size: 11px; font-weight: 600; color: rgb(148, 163, 184); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.08em;">Marks Input</div>
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                        <div style="flex: 1 1 0%; font-size: 14px; color: rgb(203, 213, 225);">Mid-Sem <span style="font-size: 12px; color: rgb(148, 163, 184);">/ 30</span></div>
-                        <input type="number" id="midSemInput" min="0" max="30" placeholder="0" value="" 
-                               style="background: rgb(15, 23, 42); border: 1px solid rgb(51, 65, 85); color: rgb(226, 232, 240); border-radius: 8px; padding: 8px 12px; width: 100px; outline: none; font-size: 14px; text-align: center;">
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                        <div style="flex: 1 1 0%; font-size: 14px; color: rgb(203, 213, 225);">End-Sem <span style="font-size: 12px; color: rgb(148, 163, 184);">/ 50</span></div>
-                        <input type="number" id="endSemInput" min="0" max="50" placeholder="0" value="" 
-                               style="background: rgb(15, 23, 42); border: 1px solid rgb(51, 65, 85); color: rgb(226, 232, 240); border-radius: 8px; padding: 8px 12px; width: 100px; outline: none; font-size: 14px; text-align: center;">
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                        <div style="flex: 1 1 0%; font-size: 14px; color: rgb(203, 213, 225);">Quiz 1 <span style="font-size: 12px; color: rgb(148, 163, 184);">/ 10</span></div>
-                        <input type="number" id="quiz1Input" min="0" max="10" placeholder="0" value="" 
-                               style="background: rgb(15, 23, 42); border: 1px solid rgb(51, 65, 85); color: rgb(226, 232, 240); border-radius: 8px; padding: 8px 12px; width: 100px; outline: none; font-size: 14px; text-align: center;">
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                        <div style="flex: 1 1 0%; font-size: 14px; color: rgb(203, 213, 225);">Quiz 2 <span style="font-size: 12px; color: rgb(148, 163, 184);">/ 10</span></div>
-                        <input type="number" id="quiz2Input" min="0" max="10" placeholder="0" value="" 
-                               style="background: rgb(15, 23, 42); border: 1px solid rgb(51, 65, 85); color: rgb(226, 232, 240); border-radius: 8px; padding: 8px 12px; width: 100px; outline: none; font-size: 14px; text-align: center;">
-                    </div>
-                    <div id="tutorialRow" style="display: none; align-items: center; gap: 12px; margin-bottom: 12px;">
-                        <div style="flex: 1 1 0%; font-size: 14px; color: rgb(203, 213, 225);">Tutorial <span style="font-size: 12px; color: rgb(148, 163, 184);">/ 25</span></div>
-                        <input type="number" id="tutorialInput" min="0" max="25" placeholder="0" value="" 
-                               style="background: rgb(15, 23, 42); border: 1px solid rgb(51, 65, 85); color: rgb(226, 232, 240); border-radius: 8px; padding: 8px 12px; width: 100px; outline: none; font-size: 14px; text-align: center;">
-                    </div>
-                </div>
-
-                <!-- Result Card -->
-                <div style="background: rgb(30, 41, 59); border: 1px solid rgb(51, 65, 85); border-radius: 12px; padding: 16px; margin-bottom: 14px;">
-                    <div style="font-size: 11px; font-weight: 600; color: rgb(148, 163, 184); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.08em;">Result</div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; text-align: center;">
-                        <div style="background: rgb(15, 23, 42); border-radius: 10px; padding: 14px 8px;">
-                            <div style="font-size: 11px; color: rgb(148, 163, 184); margin-bottom: 6px;">Total Marks</div>
-                            <div id="totalMarks" style="font-size: 26px; font-weight: 700; color: rgb(226, 232, 240); line-height: 1;">0.0</div>
-                            <div id="maxMarks" style="font-size: 11px; color: rgb(148, 163, 184); margin-top: 3px;">/ 100</div>
-                        </div>
-                        <div style="background: rgb(15, 23, 42); border-radius: 10px; padding: 14px 8px;">
-                            <div style="font-size: 11px; color: rgb(148, 163, 184); margin-bottom: 6px;">Grade</div>
-                            <div id="gradeDisplay" style="font-size: 26px; font-weight: 700; color: rgb(220, 38, 38); line-height: 1;">FF</div>
-                        </div>
-                        <div style="background: rgb(15, 23, 42); border-radius: 10px; padding: 14px 8px;">
-                            <div style="font-size: 11px; color: rgb(148, 163, 184); margin-bottom: 6px;">Grade Points</div>
-                            <div id="gradePoints" style="font-size: 26px; font-weight: 700; color: rgb(99, 102, 241); line-height: 1;">0</div>
-                            <div style="font-size: 11px; color: rgb(148, 163, 184); margin-top: 3px;">/ 10</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!-- HEADER -->
+<div class="header-wrap">
+  <div class="header-inner">
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+      <div class="logo-box">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <div class="logo-title">SVNIT</div>
+        <div class="logo-sub">Academic Dashboard</div>
+      </div>
     </div>
+    <div class="tab-bar">
+      <div class="tab-pill active" data-tab="grade">Grade Calculator</div>
+      <div class="tab-pill" data-tab="sgpa">SGPA Calculator</div>
+      <div class="tab-pill" data-tab="reference">Reference</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
+      <button id="shareBtn" class="icon-btn" title="Share">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </svg>
+      </button>
+      <button id="themeBtn" class="icon-btn" title="Toggle theme" id="themeBtn">
+        <svg id="themeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-inner">
+
+  <!-- TAB: GRADE CALCULATOR -->
+  <div class="tab-content active" id="tab-grade">
+    <div class="card">
+      <div class="card-label">Options</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div id="tutorialToggle" class="toggle-track" style="background:var(--border)"><div class="toggle-thumb"></div></div>
+        <span style="font-size:14px;color:var(--sub)">With Tutorial (125 Marks)</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div id="attendanceToggle" class="toggle-track" style="background:var(--border)"><div class="toggle-thumb"></div></div>
+        <span style="font-size:14px;color:var(--sub)">Attendance 60–75% (−1 GP)</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">75% Attendance Manager</div>
+      <div class="field-row">
+        <div class="field-label">Classes Attended</div>
+        <input type="number" id="attendedInput" class="num-input" min="0" placeholder="0" value="0">
+      </div>
+      <div class="field-row" style="margin-bottom:16px">
+        <div class="field-label">Total Classes Held</div>
+        <input type="number" id="totalInput" class="num-input" min="0" placeholder="0" value="0">
+      </div>
+      <div class="inset" style="padding:20px;text-align:center;margin-bottom:12px">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px">Attendance Percentage</div>
+        <div id="pctDisplay" style="font-size:48px;font-weight:700;line-height:1;color:var(--muted)">0%</div>
+      </div>
+      <div id="attStatus" class="inset" style="padding:16px;font-size:14px;color:var(--sub);text-align:center;line-height:1.5">
+        Enter your attendance details to see the analysis.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Marks Input</div>
+      <div class="field-row"><div class="field-label">Mid-Sem <span>/ 30</span></div><input type="number" id="midSem" class="num-input" min="0" max="30" placeholder="0"></div>
+      <div class="field-row"><div class="field-label">End-Sem <span>/ 50</span></div><input type="number" id="endSem" class="num-input" min="0" max="50" placeholder="0"></div>
+      <div class="field-row"><div class="field-label">Quiz 1 <span>/ 10</span></div><input type="number" id="quiz1" class="num-input" min="0" max="10" placeholder="0"></div>
+      <div class="field-row"><div class="field-label">Quiz 2 <span>/ 10</span></div><input type="number" id="quiz2" class="num-input" min="0" max="10" placeholder="0"></div>
+      <div class="field-row" id="tutorialRow" style="display:none"><div class="field-label">Tutorial <span>/ 25</span></div><input type="number" id="tutorial" class="num-input" min="0" max="25" placeholder="0"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Result</div>
+      <div class="result-grid">
+        <div class="result-cell"><div class="result-lbl">Total Marks</div><div id="resTotal" class="result-val" style="color:var(--text)">0.0</div><div id="resMax" class="result-sub">/ 100</div></div>
+        <div class="result-cell"><div class="result-lbl">Grade</div><div id="resGrade" class="result-val" style="color:var(--red)">FF</div></div>
+        <div class="result-cell"><div class="result-lbl">Grade Points</div><div id="resGP" class="result-val" style="color:var(--accent)">0</div><div class="result-sub">/ 10</div></div>
+      </div>
+      <div id="attWarn" class="warn-box" style="display:none">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <span id="attWarnText"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: SGPA CALCULATOR -->
+  <div class="tab-content" id="tab-sgpa">
+    <div class="card">
+      <div class="card-label">Add Subject</div>
+      <input type="text" id="sgpaName" class="text-input" placeholder="e.g., Data Structures" style="margin-bottom:10px">
+      <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end">
+        <div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Credits</div>
+          <select id="sgpaCredits" class="select-input">
+            <option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Grade</div>
+          <select id="sgpaGrade" class="select-input">
+            <option value="AA">AA (10 GP)</option><option value="AB">AB (9 GP)</option>
+            <option value="BB">BB (8 GP)</option><option value="BC">BC (7 GP)</option>
+            <option value="CC">CC (6 GP)</option><option value="CD">CD (5 GP)</option>
+            <option value="DD">DD (4 GP)</option><option value="FF">FF (0 GP)</option>
+          </select>
+        </div>
+        <button id="sgpaAddBtn" class="btn-primary" style="height:38px">+ Add</button>
+      </div>
+    </div>
+
+    <div class="card" style="padding:0;overflow:hidden">
+      <div id="sgpaTable">
+        <div class="sgpa-empty">
+          <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="margin:0 auto 12px;display:block;opacity:.3"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <div style="font-size:14px;font-weight:500;margin-bottom:4px">No subjects added yet</div>
+          <div style="font-size:13px;opacity:.7">Add a subject above to get started</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:stretch">
+      <div class="card ring-wrap" style="padding:20px;margin-bottom:0">
+        <div class="card-label" style="text-align:center">SGPA</div>
+        <svg width="128" height="128" viewBox="0 0 128 128">
+          <circle cx="64" cy="64" r="54" fill="none" stroke="var(--border)" stroke-width="10"/>
+          <circle id="sgpaRing" cx="64" cy="64" r="54" fill="none" stroke="var(--accent)" stroke-width="10"
+            stroke-dasharray="339.29" stroke-dashoffset="339.29" stroke-linecap="round" class="circle-progress"
+            style="transition:stroke-dashoffset .5s cubic-bezier(.4,0,.2,1)"/>
+          <text id="sgpaVal" x="64" y="60" text-anchor="middle" font-size="22" font-weight="700" fill="#e2e8f0">0.00</text>
+          <text x="64" y="78" text-anchor="middle" font-size="12" fill="#94a3b8">out of 10</text>
+        </svg>
+      </div>
+      <div class="sgpa-stats">
+        <div class="stat-card"><div style="font-size:12px;color:var(--muted);margin-bottom:6px">Total Subjects</div><div id="sgpaCount" style="font-size:28px;font-weight:700;color:var(--text)">0</div></div>
+        <div class="stat-card"><div style="font-size:12px;color:var(--muted);margin-bottom:6px">Total Credits</div><div id="sgpaCr" style="font-size:28px;font-weight:700;color:var(--accent)">0</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB: REFERENCE -->
+  <div class="tab-content" id="tab-reference">
+    <div style="background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.25);border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:13px;color:#a5b4fc;line-height:1.5">
+      <strong>SVNIT Grading System</strong> — Grades are awarded based on absolute marks out of 100 (standard) or 125 (with tutorial). Attendance below 75% incurs a −1 GP deduction.
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:14px">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+        <div style="width:4px;height:16px;background:var(--accent);border-radius:2px"></div>
+        <div style="font-size:14px;font-weight:600;color:var(--sub)">Out of 100 Marks — Standard Scheme</div>
+      </div>
+      <table class="ref-table"><thead><tr><th>Grade</th><th>Marks Range</th><th>Grade Points</th></tr></thead><tbody id="refBody100"></tbody></table>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:14px">
+      <div style="padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+        <div style="width:4px;height:16px;background:var(--accent);border-radius:2px"></div>
+        <div style="font-size:14px;font-weight:600;color:var(--sub)">Out of 125 Marks — With Tutorial</div>
+      </div>
+      <table class="ref-table"><thead><tr><th>Grade</th><th>Marks Range</th><th>Grade Points</th></tr></thead><tbody id="refBody125"></tbody></table>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:600;color:var(--sub);margin-bottom:12px">Quick Grade Points Reference</div>
+      <div id="quickRef" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    </div>
+  </div>
+
+</div><!-- /main-inner -->
+
+<!-- SHARE MODAL -->
+<div class="modal-overlay" id="shareModal">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div style="font-weight:600;font-size:16px;color:var(--text)">Share with Friends</div>
+      <button class="modal-close" id="modalClose">×</button>
+    </div>
+    <div style="display:flex;justify-content:center;margin-bottom:12px">
+      <div id="qrContainer" style="background:#fff;padding:12px;border-radius:12px;border:1px solid #e2e8f0;display:inline-block"></div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:12px">Scan to open dashboard</div>
+    <div class="url-box">https://hariomraghu214.github.io/Svnit_diary/</div>
+    <button id="copyLinkBtn" class="btn-primary" style="width:100%;padding:10px;font-size:14px">Copy Link</button>
+  </div>
+</div>
+
+<!-- PWA BANNER -->
+<div class="pwa-banner" id="pwaBanner">
+  <div class="pwa-icon">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+    </svg>
+  </div>
+  <div style="flex:1;min-width:0">
+    <div style="font-size:13px;font-weight:600;color:var(--text)">Install SVNIT Academic Dashboard</div>
+    <div style="font-size:12px;color:var(--muted)">Add to home screen for quick access</div>
+  </div>
+  <div style="display:flex;gap:8px;flex-shrink:0">
+    <button id="installBtn" class="btn-primary" style="font-size:12px;padding:6px 14px;border-radius:7px">Install</button>
+    <button id="dismissBtn" class="btn-ghost" style="font-size:12px;padding:6px 12px;border-radius:7px">Later</button>
+  </div>
 </div>
 
 <script>
-// Global state
-let state = {
-    tutorialEnabled: false,
-    attendancePenalty: false
-};
+/* ── CONSTANTS ── */
+const GRADE_POINTS = {AA:10,AB:9,BB:8,BC:7,CC:6,CD:5,DD:4,FF:0};
+const GRADE_COLORS = {AA:'#10b981',AB:'#34d399',BB:'#6366f1',BC:'#8b5cf6',CC:'#f59e0b',CD:'#f97316',DD:'#ef4444',FF:'#dc2626'};
+const GRADES_100 = [
+  {grade:'AA',min:80, gp:10,range:'≥ 80 marks'},
+  {grade:'AB',min:70, gp:9, range:'70 – 79 marks'},
+  {grade:'BB',min:60, gp:8, range:'60 – 69 marks'},
+  {grade:'BC',min:50, gp:7, range:'50 – 59 marks'},
+  {grade:'CC',min:45, gp:6, range:'45 – 49 marks'},
+  {grade:'CD',min:40, gp:5, range:'40 – 44 marks'},
+  {grade:'DD',min:36, gp:4, range:'36 – 39 marks'},
+  {grade:'FF',min:0,  gp:0, range:'< 36 marks'},
+];
+const GRADES_125 = [
+  {grade:'AA',min:100,gp:10,range:'≥ 100 marks'},
+  {grade:'AB',min:88, gp:9, range:'88 – 99 marks'},
+  {grade:'BB',min:75, gp:8, range:'75 – 87 marks'},
+  {grade:'BC',min:63, gp:7, range:'63 – 74 marks'},
+  {grade:'CC',min:56, gp:6, range:'56 – 62 marks'},
+  {grade:'CD',min:50, gp:5, range:'50 – 55 marks'},
+  {grade:'DD',min:45, gp:4, range:'45 – 49 marks'},
+  {grade:'FF',min:0,  gp:0, range:'< 45 marks'},
+];
+const APP_URL = 'https://hariomraghu214.github.io/Svnit_diary/';
 
-// ========== ATTENDANCE CALCULATOR ==========
-(function() {
-    const attendedInput = document.getElementById('attendedInput');
-    const totalInput = document.getElementById('totalInput');
-    const percentageDisplay = document.getElementById('percentageDisplay');
-    const statusMessage = document.getElementById('statusMessage');
+/* ── STATE ── */
+let tutorialOn=false, attPenOn=false, isDark=true;
+let sgpaSubjects=[], installPrompt=null;
 
-    function calculateAttendance() {
-        let attended = parseInt(attendedInput.value) || 0;
-        let total = parseInt(totalInput.value) || 0;
+function clamp(v,mn,mx){const n=parseFloat(v);return isNaN(n)?0:Math.min(Math.max(n,mn),mx);}
+function uid(){return Math.random().toString(36).slice(2)+Date.now().toString(36);}
+function getGradeRow(marks,isTut){const t=isTut?GRADES_125:GRADES_100;for(const r of t)if(marks>=r.min)return r;return t[t.length-1];}
 
-        // Validation: Prevent attended from being greater than total
-        if (attended > total && total > 0) {
-            attended = total;
-            attendedInput.value = total;
-        }
+/* ════ THEME TOGGLE ✅ ════ */
+const SUN=`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+const MOON=`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>`;
 
-        // Calculate percentage
-        let percentage = 0;
-        if (total > 0) {
-            percentage = (attended / total) * 100;
-        }
+document.getElementById('themeBtn').addEventListener('click',function(){
+  isDark=!isDark;
+  document.body.classList.toggle('light',!isDark);
+  this.innerHTML=isDark?SUN:MOON;
+  document.getElementById('sgpaVal').setAttribute('fill',isDark?'#e2e8f0':'#1e293b');
+  try{localStorage.setItem('svnit_theme',isDark?'dark':'light');}catch(e){}
+});
+try{if(localStorage.getItem('svnit_theme')==='light')document.getElementById('themeBtn').click();}catch(e){}
 
-        // Update percentage display with color
-        const percentageText = percentage.toFixed(1) + '%';
-        percentageDisplay.textContent = percentageText;
+/* ════ TAB NAVIGATION ✅ — no alert, all tabs work ════ */
+document.querySelectorAll('.tab-pill').forEach(pill=>{
+  pill.addEventListener('click',function(){
+    document.querySelectorAll('.tab-pill').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    this.classList.add('active');
+    document.getElementById('tab-'+this.dataset.tab).classList.add('active');
+  });
+});
 
-        // Color coding
-        if (percentage >= 75) {
-            percentageDisplay.style.color = 'rgb(34, 197, 94)'; // Green
-        } else {
-            percentageDisplay.style.color = 'rgb(220, 38, 38)'; // Red
-        }
+/* ════ TOGGLES ════ */
+function makeToggle(id,onFn,offFn){
+  const el=document.getElementById(id);
+  const thumb=el.querySelector('.toggle-thumb');
+  let on=false;
+  el.addEventListener('click',function(){
+    on=!on;
+    thumb.style.left=on?'23px':'3px';
+    el.style.background=on?'rgb(99,102,241)':'var(--border)';
+    on?onFn():offFn();
+  });
+}
+makeToggle('tutorialToggle',
+  ()=>{tutorialOn=true; document.getElementById('tutorialRow').style.display='flex'; calcGrade();},
+  ()=>{tutorialOn=false;document.getElementById('tutorialRow').style.display='none';document.getElementById('tutorial').value='';calcGrade();}
+);
+makeToggle('attendanceToggle',
+  ()=>{attPenOn=true; calcGrade();},
+  ()=>{attPenOn=false;calcGrade();}
+);
 
-        // Calculate status message based on the three states
-        if (total === 0 || attended === 0) {
-            statusMessage.textContent = 'Enter your attendance details to see the analysis.';
-            statusMessage.style.color = 'rgb(203, 213, 225)';
-            percentageDisplay.style.color = 'rgb(148, 163, 184)';
-        } else if (percentage > 75) {
-            // State A: Safe - Can bunk classes
-            const bunkable = Math.floor((4 * attended - 3 * total) / 3);
-            if (bunkable > 0) {
-                statusMessage.innerHTML = `✓ You can safely bunk <strong>${bunkable}</strong> class${bunkable > 1 ? 'es' : ''}.`;
-                statusMessage.style.color = 'rgb(34, 197, 94)'; // Green
-            } else {
-                statusMessage.textContent = '✓ You are above 75%. Keep it up!';
-                statusMessage.style.color = 'rgb(34, 197, 94)'; // Green
-            }
-        } else if (percentage < 75) {
-            // State B: Danger - Must attend classes
-            const recover = Math.ceil(3 * total - 4 * attended);
-            statusMessage.innerHTML = `⚠ You must attend <strong>${recover}</strong> class${recover > 1 ? 'es' : ''} in a row to recover.`;
-            statusMessage.style.color = 'rgb(239, 68, 68)'; // Red
-        } else {
-            // State C: Critical - Exactly 75%
-            statusMessage.textContent = '⚡ You are on the edge. Do not miss the next class.';
-            statusMessage.style.color = 'rgb(245, 158, 11)'; // Orange/Yellow
-        }
-    }
+/* ════ ATTENDANCE MANAGER ════ */
+function calcAttendance(){
+  let att=clamp(document.getElementById('attendedInput').value,0,Infinity);
+  let tot=clamp(document.getElementById('totalInput').value,0,Infinity);
+  if(tot>0&&att>tot){att=tot;document.getElementById('attendedInput').value=tot;}
+  const pctEl=document.getElementById('pctDisplay');
+  const stEl=document.getElementById('attStatus');
+  if(tot===0){
+    pctEl.textContent='0%';pctEl.style.color='var(--muted)';
+    stEl.textContent='Enter your attendance details to see the analysis.';stEl.style.color='var(--sub)';return;
+  }
+  const pct=(att/tot)*100;
+  pctEl.textContent=pct.toFixed(1)+'%';
+  if(pct>=75){
+    pctEl.style.color='var(--green)';
+    const canBunk=Math.floor((att-0.75*tot)/0.75);
+    stEl.innerHTML=canBunk>0?`✓ You can safely bunk <strong>${canBunk}</strong> class${canBunk>1?'es':''}.`:'✓ You are at exactly 75%. Attend the next class to build a buffer.';
+    stEl.style.color='var(--green)';
+  } else {
+    pctEl.style.color='var(--red)';
+    const recover=Math.ceil(3*tot-4*att);
+    stEl.innerHTML=`⚠ Must attend <strong>${recover}</strong> consecutive class${recover>1?'es':''} to reach 75%.`;
+    stEl.style.color='var(--red)';
+  }
+}
+['attendedInput','totalInput'].forEach(id=>document.getElementById(id).addEventListener('input',calcAttendance));
 
-    // Add event listeners for real-time updates
-    attendedInput.addEventListener('input', calculateAttendance);
-    totalInput.addEventListener('input', calculateAttendance);
+/* ════ GRADE CALCULATOR ✅ — correct SVNIT absolute mark ranges ════ */
+function calcGrade(){
+  const mid=clamp(document.getElementById('midSem').value,0,30);
+  const end=clamp(document.getElementById('endSem').value,0,50);
+  const q1=clamp(document.getElementById('quiz1').value,0,10);
+  const q2=clamp(document.getElementById('quiz2').value,0,10);
+  const tut=tutorialOn?clamp(document.getElementById('tutorial').value,0,25):0;
+  const maxM=tutorialOn?125:100;
+  const total=mid+end+q1+q2+tut;
+  const row=getGradeRow(total,tutorialOn);
+  let gp=row.gp;
+  if(attPenOn&&gp>0)gp=Math.max(0,gp-1);
+  document.getElementById('resTotal').textContent=total.toFixed(1);
+  document.getElementById('resMax').textContent='/ '+maxM;
+  document.getElementById('resGrade').textContent=row.grade;
+  document.getElementById('resGrade').style.color=GRADE_COLORS[row.grade];
+  document.getElementById('resGP').textContent=gp;
+  document.getElementById('resGP').style.color=gp>=6?'var(--accent)':'var(--red)';
+  const warnEl=document.getElementById('attWarn');
+  if(attPenOn&&row.gp>0){
+    warnEl.style.display='flex';
+    document.getElementById('attWarnText').textContent=`Attendance penalty applied: −1 GP (base grade: ${row.grade} = ${row.gp} GP)`;
+  } else {warnEl.style.display='none';}
+}
+['midSem','endSem','quiz1','quiz2','tutorial'].forEach(id=>document.getElementById(id).addEventListener('input',calcGrade));
 
-    // Prevent negative values
-    attendedInput.addEventListener('blur', function() {
-        if (parseInt(this.value) < 0) this.value = 0;
-    });
-    totalInput.addEventListener('blur', function() {
-        if (parseInt(this.value) < 0) this.value = 0;
-    });
+/* ════ SGPA CALCULATOR ✅ — fully implemented ════ */
+function renderSGPA(){
+  const C=2*Math.PI*54;
+  const totCr=sgpaSubjects.reduce((a,s)=>a+s.credits,0);
+  const wSum=sgpaSubjects.reduce((a,s)=>a+s.credits*GRADE_POINTS[s.grade],0);
+  const sgpa=totCr===0?0:wSum/totCr;
+  const offset=C-(sgpa/10)*C;
+  document.getElementById('sgpaVal').textContent=sgpa.toFixed(2);
+  document.getElementById('sgpaRing').setAttribute('stroke-dashoffset',offset.toFixed(2));
+  document.getElementById('sgpaCount').textContent=sgpaSubjects.length;
+  document.getElementById('sgpaCr').textContent=totCr;
+  const tEl=document.getElementById('sgpaTable');
+  if(sgpaSubjects.length===0){
+    tEl.innerHTML='<div class="sgpa-empty"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="margin:0 auto 12px;display:block;opacity:.3"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><div style="font-size:14px;font-weight:500;margin-bottom:4px">No subjects added yet</div><div style="font-size:13px;opacity:.7">Add a subject above to get started</div></div>';
+    return;
+  }
+  tEl.innerHTML=`<table class="sgpa-table"><thead><tr><th>Subject</th><th>Cr</th><th>Grade</th><th>GP</th><th></th></tr></thead><tbody>${
+    sgpaSubjects.map(s=>`<tr><td title="${s.name}">${s.name}</td><td>${s.credits}</td><td><span class="grade-badge" style="background:${GRADE_COLORS[s.grade]}22;color:${GRADE_COLORS[s.grade]}">${s.grade}</span></td><td>${GRADE_POINTS[s.grade]}</td><td><button class="del-btn" data-id="${s.id}" style="background:none;border:none;cursor:pointer;color:var(--red);font-size:18px;line-height:1;padding:0 4px">×</button></td></tr>`).join('')
+  }</tbody></table>`;
+  tEl.querySelectorAll('.del-btn').forEach(btn=>btn.addEventListener('click',function(){
+    sgpaSubjects=sgpaSubjects.filter(s=>s.id!==this.dataset.id);renderSGPA();
+  }));
+}
+document.getElementById('sgpaAddBtn').addEventListener('click',function(){
+  const name=document.getElementById('sgpaName').value.trim();
+  if(!name){document.getElementById('sgpaName').focus();return;}
+  sgpaSubjects.push({id:uid(),name,credits:parseInt(document.getElementById('sgpaCredits').value),grade:document.getElementById('sgpaGrade').value});
+  document.getElementById('sgpaName').value='';
+  renderSGPA();
+});
+document.getElementById('sgpaName').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sgpaAddBtn').click();});
+renderSGPA();
 
-    // Initial calculation
-    calculateAttendance();
+/* ════ REFERENCE TABLES ════ */
+function buildRefTable(id,rows){
+  document.getElementById(id).innerHTML=rows.map(r=>`<tr><td><span class="grade-badge" style="background:${GRADE_COLORS[r.grade]}22;color:${GRADE_COLORS[r.grade]}">${r.grade}</span></td><td>${r.range}</td><td>${r.gp}</td></tr>`).join('');
+}
+buildRefTable('refBody100',GRADES_100);
+buildRefTable('refBody125',GRADES_125);
+document.getElementById('quickRef').innerHTML=Object.entries(GRADE_POINTS).map(([g,gp])=>`<div style="display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 14px"><span style="color:${GRADE_COLORS[g]};font-weight:700;font-size:14px">${g}</span><span style="color:var(--muted);font-size:12px">= ${gp} GP</span></div>`).join('');
+
+/* ════ SHARE BUTTON ✅ — proper modal, no alert ════ */
+let qrRendered=false;
+document.getElementById('shareBtn').addEventListener('click',async function(){
+  if(navigator.share){
+    try{await navigator.share({title:'SVNIT Academic Dashboard',text:'Grade & SGPA tracker for SVNIT students!',url:APP_URL});return;}catch(e){}
+  }
+  if(!qrRendered){
+    const img=document.createElement('img');
+    img.src=`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(APP_URL)}`;
+    img.width=150;img.height=150;img.style.borderRadius='4px';img.alt='QR';
+    document.getElementById('qrContainer').appendChild(img);
+    qrRendered=true;
+  }
+  document.getElementById('shareModal').classList.add('open');
+});
+document.getElementById('modalClose').addEventListener('click',()=>document.getElementById('shareModal').classList.remove('open'));
+document.getElementById('shareModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+let copyTimer;
+document.getElementById('copyLinkBtn').addEventListener('click',function(){
+  clearTimeout(copyTimer);
+  navigator.clipboard.writeText(APP_URL).catch(()=>{});
+  this.textContent='✓ Copied!';
+  copyTimer=setTimeout(()=>{this.textContent='Copy Link';},2000);
+});
+
+/* ════ PWA INSTALL ✅ — manifest + SW both via Blob, proper async flow ════ */
+// Inline manifest — no manifest.json file needed
+(function(){
+  try{
+    const m={name:'SVNIT Academic Dashboard',short_name:'SVNIT Diary',start_url:'./',display:'standalone',background_color:'#0f172a',theme_color:'#6366f1',
+      icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='32' fill='%236366f1'/%3E%3Cpath d='M96 40L40 68l56 28 56-28-56-28zM40 124l56 28 56-28M40 96l56 28 56-28' fill='none' stroke='white' stroke-width='12' stroke-linecap='round'/%3E%3C/svg%3E",sizes:'192x192',type:'image/svg+xml',purpose:'any maskable'}]};
+    const blob=new Blob([JSON.stringify(m)],{type:'application/json'});
+    document.getElementById('pwa-manifest').href=URL.createObjectURL(blob);
+  }catch(e){}
 })();
 
-// ========== GRADE CALCULATOR ==========
-(function() {
-    const midSemInput = document.getElementById('midSemInput');
-    const endSemInput = document.getElementById('endSemInput');
-    const quiz1Input = document.getElementById('quiz1Input');
-    const quiz2Input = document.getElementById('quiz2Input');
-    const tutorialInput = document.getElementById('tutorialInput');
-    const totalMarksDisplay = document.getElementById('totalMarks');
-    const gradeDisplay = document.getElementById('gradeDisplay');
-    const gradePointsDisplay = document.getElementById('gradePoints');
-    const maxMarksDisplay = document.getElementById('maxMarks');
+// Inline Service Worker — no sw.js file needed
+if('serviceWorker' in navigator){
+  try{
+    const sw=`const C='svnit-v1';self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(['./'])));self.skipWaiting();});self.addEventListener('activate',e=>{e.waitUntil(clients.claim());});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)));});`;
+    navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'application/javascript'}))).catch(e=>console.warn('SW:',e.message));
+  }catch(e){}
+}
 
-    function getGrade(marks, maxMarks) {
-        const percentage = (marks / maxMarks) * 100;
-        
-        if (percentage >= 90) return { grade: 'AA', points: 10, color: 'rgb(34, 197, 94)' };
-        if (percentage >= 80) return { grade: 'AB', points: 9, color: 'rgb(34, 197, 94)' };
-        if (percentage >= 70) return { grade: 'BB', points: 8, color: 'rgb(34, 197, 94)' };
-        if (percentage >= 60) return { grade: 'BC', points: 7, color: 'rgb(34, 197, 94)' };
-        if (percentage >= 50) return { grade: 'CC', points: 6, color: 'rgb(245, 158, 11)' };
-        if (percentage >= 40) return { grade: 'CD', points: 5, color: 'rgb(245, 158, 11)' };
-        if (percentage >= 35) return { grade: 'DD', points: 4, color: 'rgb(239, 68, 68)' };
-        return { grade: 'FF', points: 0, color: 'rgb(220, 38, 38)' };
-    }
+// Capture install prompt
+window.addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault();installPrompt=e;
+  try{if(localStorage.getItem('svnit_pwa_dismissed')==='true')return;}catch(e2){}
+  if(!window.matchMedia('(display-mode: standalone)').matches&&!navigator.standalone)
+    document.getElementById('pwaBanner').classList.add('show');
+});
+window.addEventListener('appinstalled',function(){
+  installPrompt=null;document.getElementById('pwaBanner').classList.remove('show');
+});
 
-    function calculateGrade() {
-        const midSem = parseFloat(midSemInput.value) || 0;
-        const endSem = parseFloat(endSemInput.value) || 0;
-        const quiz1 = parseFloat(quiz1Input.value) || 0;
-        const quiz2 = parseFloat(quiz2Input.value) || 0;
-        const tutorial = state.tutorialEnabled ? (parseFloat(tutorialInput.value) || 0) : 0;
+// Install button — async, properly awaits both prompt() and userChoice
+document.getElementById('installBtn').addEventListener('click',async function(){
+  if(!installPrompt)return;
+  try{
+    await installPrompt.prompt();
+    const{outcome}=await installPrompt.userChoice;
+    if(outcome==='accepted'){installPrompt=null;document.getElementById('pwaBanner').classList.remove('show');}
+  }catch(err){console.warn('Install error:',err);}
+});
+document.getElementById('dismissBtn').addEventListener('click',function(){
+  document.getElementById('pwaBanner').classList.remove('show');
+  try{localStorage.setItem('svnit_pwa_dismissed','true');}catch(e){}
+});
 
-        // Validate max values
-        if (midSem > 30) midSemInput.value = 30;
-        if (endSem > 50) endSemInput.value = 50;
-        if (quiz1 > 10) quiz1Input.value = 10;
-        if (quiz2 > 10) quiz2Input.value = 10;
-        if (tutorial > 25) tutorialInput.value = 25;
-
-        const totalMarks = midSem + endSem + quiz1 + quiz2 + tutorial;
-        const maxMarks = state.tutorialEnabled ? 125 : 100;
-
-        // Get grade and points
-        let gradeData = getGrade(totalMarks, maxMarks);
-        
-        // Apply attendance penalty if enabled
-        if (state.attendancePenalty && gradeData.points > 0) {
-            gradeData.points = Math.max(0, gradeData.points - 1);
-        }
-
-        // Update display
-        totalMarksDisplay.textContent = totalMarks.toFixed(1);
-        maxMarksDisplay.textContent = `/ ${maxMarks}`;
-        gradeDisplay.textContent = gradeData.grade;
-        gradeDisplay.style.color = gradeData.color;
-        gradePointsDisplay.textContent = gradeData.points;
-        gradePointsDisplay.style.color = gradeData.points >= 6 ? 'rgb(99, 102, 241)' : 'rgb(220, 38, 38)';
-    }
-
-    // Add event listeners
-    midSemInput.addEventListener('input', calculateGrade);
-    endSemInput.addEventListener('input', calculateGrade);
-    quiz1Input.addEventListener('input', calculateGrade);
-    quiz2Input.addEventListener('input', calculateGrade);
-    tutorialInput.addEventListener('input', calculateGrade);
-
-    // Make calculateGrade global so toggles can trigger it
-    window.calculateGrade = calculateGrade;
-})();
-
-// ========== TOGGLE SWITCHES ==========
-(function() {
-    const tutorialToggle = document.getElementById('tutorialToggle');
-    const attendancePenaltyToggle = document.getElementById('attendancePenaltyToggle');
-    const tutorialRow = document.getElementById('tutorialRow');
-
-    tutorialToggle.addEventListener('click', function() {
-        state.tutorialEnabled = !state.tutorialEnabled;
-        const thumb = this.querySelector('.toggle-thumb');
-        
-        if (state.tutorialEnabled) {
-            this.style.background = 'rgb(99, 102, 241)';
-            thumb.style.left = '23px';
-            tutorialRow.style.display = 'flex';
-        } else {
-            this.style.background = 'rgb(51, 65, 85)';
-            thumb.style.left = '3px';
-            tutorialRow.style.display = 'none';
-            document.getElementById('tutorialInput').value = '';
-        }
-        window.calculateGrade();
-    });
-
-    attendancePenaltyToggle.addEventListener('click', function() {
-        state.attendancePenalty = !state.attendancePenalty;
-        const thumb = this.querySelector('.toggle-thumb');
-        
-        if (state.attendancePenalty) {
-            this.style.background = 'rgb(239, 68, 68)';
-            thumb.style.left = '23px';
-        } else {
-            this.style.background = 'rgb(51, 65, 85)';
-            thumb.style.left = '3px';
-        }
-        window.calculateGrade();
-    });
-})();
-
-// ========== HEADER BUTTONS ==========
-(function() {
-    const shareBtn = document.getElementById('shareBtn');
-    const themeBtn = document.getElementById('themeBtn');
-
-    shareBtn.addEventListener('click', function() {
-        this.style.color = 'rgb(99, 102, 241)';
-        setTimeout(() => {
-            this.style.color = 'rgb(148, 163, 184)';
-        }, 200);
-        
-        // Copy URL to clipboard
-        if (navigator.clipboard) {
-            navigator.clipboard.writeText(window.location.href);
-            alert('Link copied to clipboard!');
-        } else {
-            alert('Share: ' + window.location.href);
-        }
-    });
-
-    themeBtn.addEventListener('click', function() {
-        this.style.color = 'rgb(99, 102, 241)';
-        setTimeout(() => {
-            this.style.color = 'rgb(148, 163, 184)';
-        }, 200);
-        alert('Theme toggle feature - Coming soon!');
-    });
-})();
-
-// ========== TAB NAVIGATION ==========
-(function() {
-    const tabs = document.querySelectorAll('.tab-pill');
-    
-    tabs.forEach((tab, index) => {
-        tab.addEventListener('click', function() {
-            // Remove active state from all tabs
-            tabs.forEach(t => {
-                t.style.background = 'transparent';
-                t.style.color = 'rgb(148, 163, 184)';
-            });
-            
-            // Add active state to clicked tab
-            this.style.background = 'rgb(99, 102, 241)';
-            this.style.color = 'white';
-            
-            // Show message for non-implemented tabs
-            if (index !== 0) {
-                setTimeout(() => {
-                    alert(this.textContent + ' - Coming soon!');
-                    // Reset to Grade Calculator tab
-                    tabs[0].click();
-                }, 100);
-            }
-        });
-    });
-})();
+// Init
+calcAttendance();
+calcGrade();
 </script>
-
 </body>
 </html>
